@@ -1,4 +1,4 @@
-var word = 'Hello';
+var word = "Hello";
 
 console.log(word);
 
@@ -7,5 +7,8 @@ console.log(word);
 const componentA = '';
 const componentB = '';
 
+
 export default componentA;
 export { componentB, word };
+
+
