@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@commons/style/themes/styled';
-import { testApi } from '@src/containers/Test/api';
+import { testApi, khcTestApi } from '@src/containers/Test/api';
 import { RootState } from '@src/reducers';
 import { LOAD_TEST } from '@src/containers/Test/constants';
-import api from '@src/utils/AxiosUtils';
 
 function IndexPage(): JSX.Element {
   const router = useRouter();
@@ -15,12 +14,6 @@ function IndexPage(): JSX.Element {
   const { testReduxObject } = useSelector(
     (state: RootState) => state.testReducer,
   );
-
-  useEffect(() => {
-    api
-      .get('https://movie.daum.net/api/contents/popularNews?size=4')
-      .catch((e) => console.error(e));
-  }, []);
 
   const renderTestReduxObject = useCallback(() => {
     return (
@@ -40,26 +33,17 @@ function IndexPage(): JSX.Element {
       <ContainerStyle>
         <ButtonStyle
           onClick={() => {
-            dispatch({ type: LOAD_TEST });
-          }}
-        >
-          데이터 로드 (redux-saga)
-        </ButtonStyle>
-        <ButtonStyle
-          onClick={() => {
-            testApi().then((response) => {
-              setIds(response.data?.items?.map((item) => item.id)?.toString());
+            khcTestApi().then((res) => {
+              console.log(res.data.boxOfficeResult.weeklyBoxOfficeList);
+              setIds(
+                res.data.boxOfficeResult.weeklyBoxOfficeList
+                  .map((movie) => movie.movieNm)
+                  .toString(),
+              );
             });
           }}
         >
           데이터 로드 (axios promise)
-        </ButtonStyle>
-        <ButtonStyle
-          onClick={() => {
-            router.push('/maintainState');
-          }}
-        >
-          페이지 이동
         </ButtonStyle>
       </ContainerStyle>
       <ContainerStyle>
